@@ -1,0 +1,167 @@
+New linux commands!
+
+clear: clears the terminal (doesn't change any of your files or anything though). For when you need a clean visual palette. 
+
+
+options
+ls: 
+ls -t: sorts by time
+ls -l: long version
+ls -r: reverses the order the list prints
+ls -a: shows 'all' inc hidden files
+
+all these options can be combined
+
+can also add 'arguments' to linux commands
+
+i.e. ls -l DirectoryName: this will do a long list of all the files in that directory
+
+
+TIP
+. - stands for 'current directory' i.e. if I want to move something i can do:
+	mv Directory/File.txt . and this will move my file from another directory into my current one
+
+DELETING
+
+rm: - removing a single file
+rm -r : removes a directory, recursively (i.e. removes everything within it)
+
+WHEN STUCK USE 'MAN', which calls up the manual!
+
+
+
+history: shows all of the commands that I have executed recently in a numbered list
+ 
+to skip around on the command line: 
+Ctl + A: takes you to the start of the line (i.e. where you start typing) - useful if typed a mistake early on!
+Ctl + E: takes you to the end of the liune
+
+Wildcards: 
+*: any number of characters 
+
+
+Writing to a file: 
+
+ls -l > ls.out : This will list all the files in the directory (long form) and then write them to a file ls.out
+
+to read ls.out, you can use the command 'less'
+
+i.e. less ls.out will display the contents of ls.out in the terminal
+
+echo (adds text to an output): 
+echo "Hello world" >> ls.out 
+if used ">" rather than ">>" it would overwrite the file 
+
+You can control the way in which data is output from files into the terminal
+
+i.e. less file.txt will print the contents of the file into the terminal
+sort < theme.txt  wil print the contents of the file, but sorted alphabetically!
+
+To combine commands... we use the pipe | (SHIFT + button next to left-hand-shift)
+
+
+Maniupating printing out :
+
+sort filename.txt: prints out file with the lines in alphabetical order
+sort -r filename.txt : same as above, but in reverse order
+sort -R file.txt : this scrambles the order of the file!
+
+if I want to save this sorted file:
+sort file.txt > sortd_filename.txt: this writes the sorted data into a new file
+
+
+uniq - this removes repeated lines, but only if adjascent to one another
+so, should 'sort' the file first, then pipe to uniq
+
+i.e. sort fruit.txt | uniq 
+
+what is coool, is you can combine commands
+
+ie 
+uniq -ic: this counts the number of times each line appears in the file
+
+Using the fruit file as an example: 
+sort fruit.txt | uniq -ic : this prints out each unique line and how many times it's in the file, as follows: 
+
+      2 Apple
+      2 Banana
+      2 Grape
+      2 Kiwi
+      2 Melon
+      2 Orange
+      2 Pear
+      2 Satsuma
+      2 TOMATO? 
+      1 sorted_fruit.txt
+      7 tomato
+      1 tomato?
+
+
+grep: how we find things
+
+done as: 
+
+grep [-any modifiers] String/"string with spaces" filename
+
+i.e. to find all the tomatoes in fruit: 
+
+grep tomato fruit.txt 
+
+This will print out every instance of the word tomato. Not immediately useful....
+
+the modifiers and ability to pipe make things more interesting
+
+-c: count the number of instances
+-v: everything that *isn't* what you're looking for
+-vc: count everything that isn't that string
+--- look up "grep man" for more modifiers
+
+substituting: 
+
+format is like this: 
+sed 's/oldtext/newtext' file.txt
+
+sed: initiates the 'sed' function
+'s: not sure what this does - I think maybe it stands for 'substitute'?
+/ these are mandatory
+
+you can either substitute into a new file (i.e. leave the original unmodified):
+
+sed 's/old/new/' file.txt > fixedfile.txt
+
+or you can write straight into the original file (dangerous!). To do this use the -i modifier between sed and the info, and then don't put anything after the filename, i.e.
+sed -i 's/old/new/' file.txt
+
+
+
+
+
+OK LETS TALK ABOUT AWK
+
+
+syntax: 
+
+awk -specific command "deliniator" '{commmand $columnReference}' filename.someting
+
+i.e.
+
+awk -F "\t" '{print $1}' Diamonds_fix.txt
+
+This: deploys awk, then tells awk the file deliniator is a tab, then prints the first column of the Diamonds_fix file. 
+
+
+can combine awk commands
+
+i.e. awk -F "\t" '$2 == "Ideal" && $4 == "SI2"' Diamonds_fix.txt - this will print every line where column 2 is ideal and column 4 is SI2
+
+also awk -F "\t" '$2 == "Ideal" || $4 == "something" Diamonds_fix.txt - this will print the line where either/both criteria are true (so its an OR)
+
+we can filter on numeric values as well as stringmatching - 
+
+awk -F "\t" '$1 >1' Diamonds_fix.txt - will only print lines where the first column is greater than one. 
+
+this will print the header values for the columns (which I personally find quite useful). If i'd like to omit them, then: 
+
+awk -F"\t" 'FNR>1 && $1>1' Diamonds_fix.txt - here, FNR represnts the current line number, so we're asking awk to print the line if this is greater than 1 (i.e. skip line 1). 
+
+
